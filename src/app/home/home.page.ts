@@ -1,3 +1,4 @@
+import { sharedStylesheetJitUrl } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { SwapiService } from '../swapi.service';
 
@@ -8,6 +9,9 @@ import { SwapiService } from '../swapi.service';
 })
 export class HomePage implements OnInit {
 
+  planets: {
+    name: string;
+  }[] = [];
   constructor(
     private swapiSvc: SwapiService
   ) {}
@@ -15,7 +19,13 @@ export class HomePage implements OnInit {
   ngOnInit(){
     this.swapiSvc.loadPlanets().subscribe(
       data => {
-        console.log(data);
+        this.planets = [
+          ...this.planets
+          , ...data.results
+        ].sort(
+          (a, b) => a.name.toUpperCase().localeCompare(b.name.toUpperCase())
+        );
+        console.log(this.planets);
       }
       , err => console.error(err)
     );
